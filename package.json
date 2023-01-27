@@ -1,0 +1,56 @@
+{
+  "name": "proyecto_integrador_digital",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "description": "- Temática y descripción del sitio:",
+  "dependencies": {
+    "@polkadot/api": "^9.3.3",
+    "axios": "^1.2.2",
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
+    "bootstrap": "^5.2.3",
+    "chalk": "^5.2.0",
+    "chart": "^0.1.2",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-generator": "^4.2.0",
+    "express-session": "^1.17.3",
+    "express-validator": "^6.14.2",
+    "global": "^4.4.0",
+    "i": "^0.3.7",
+    "jquery": "^3.6.1",
+    "method-override": "^3.0.0",
+    "moment": "^2.29.4",
+    "multer": "^1.4.5-lts.1",
+    "muter": "^0.7.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
+    "node-fetch": "^3.3.0",
+    "nodemon": "^2.0.20",
+    "npm": "^8.19.1",
+    "npm-bundle": "^3.0.3",
+    "pg": "^8.8.0",
+    "sequelize": "^6.27.0",
+    "sequelize-cli": "^6.5.2",
+    "sweetalert2": "^11.6.16",
+    "validator": "^13.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lorenacardenas06/Proyecto_Integrador_Digital.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lorenacardenas06/Proyecto_Integrador_Digital/issues"
+  },
+  "homepage": "https://github.com/lorenacardenas06/Proyecto_Integrador_Digital#readme"
+}

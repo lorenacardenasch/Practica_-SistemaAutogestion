@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>Registro de Usuario</title>
+    <link rel="stylesheet" href="/css/registro.css"></link>
+    <%-include("../partials/head")%>
+    <%-include("../partials/header")%>
+  </head>
+  <body class="body">
+    <div class="main">
+      <div class="contenedorImagen"> 
+      </div>
+      <form action="/registro"  method="POST" enctype="multipart/form-data">
+        <div class="contenedorLogin"> 
+          <div class = "encabezado">
+            <h3>Crea una cuenta</h3>
+            <% if (existe) { %>
+              <div class="fail">
+                <p>El email ingresado ya se encuentra registrado</p>
+              </div>
+            <% } %>
+          </div>
+          <div class="contenedorInput" id="datos_usuario">
+            <label for="nombre" class="form-label"><b>Nombre:</b></label><br>
+            <!-- con required and minlenght podemos validar los caracteres minimos y que sea obligatorio -->
+            <input title="no puedes ingresar numeros y debe ser mayor a 2 caracteres" minlength="2" pattern="[^0-9]*" required type="name" id="nombre" name="nombre" class="form-input" placeholder= "Ingrese su nombre" value="<%= locals.datosUsuarioViejo && datosUsuarioViejo.nombre ? datosUsuarioViejo.nombre: ''%>"/>
+          </div>
+          <% if (locals.errores && errores.nombre){ %>
+            <div class="text-errores">
+              <p><%= errores.nombre.msg%></p>
+            </div>
+          <% } %>
+          <div class="contenedorInput" id="datos_usuario">
+            <label for="apellido" class="form-label"><b>Apellidos:</b></label><br>
+            <input minlength="2" required type="apellido" id="apellido" name="apellido" minlength="2" class="form-input" placeholder= "Ingrese sus apellidos" value="<%= locals.datosUsuarioViejo && datosUsuarioViejo.apellido ? datosUsuarioViejo.apellido: '' %>" />
+          </div>
+          <% if (locals.errores && errores.apellido){ %>
+            <div class="text-errores">
+              <p><%= errores.apellido.msg%></p>
+            </div>
+          <% } %>
+          <div class="contenedorInput" id="datos_usuario">
+            <label for="email" class="form-label" ><b>Correo Electrónico:</b></label><br>
+            <input required type="email" id="email" name="email" class="form-input" placeholder= "Ingrese su correo electrónico" value="<%= locals.datosUsuarioViejo && datosUsuarioViejo.email ? datosUsuarioViejo.email: '' %>"/>
+          </div>
+          <% if (locals.errores && errores.email){ %>
+            <div class="text-errores">
+              <p><%= errores.email.msg%></p>
+            </div>
+          <% } %>
+          <!-- para la contrasenia usamos el atributo pattern usando regex matchamos el pattern-->
+          <div class="contenedorInput" id="datos_usuario">
+            <label for="contrasena" class="form-label"><b>Contraseña:</b></label><br>
+            <input required type="password" id="contrasena" name="contrasena" class="form-input" placeholder="Ingrese una contraseña" pattern="(?=^.{8,}$)(?=.*\d)(?=.*\W+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" title="La contraseña debe ser de al menos 8 caracteres y tener letras mayúsculas, minúsculas, un número y un carácter especial."/>
+          </div>
+          <% if (locals.errores && errores.contrasena){ %>
+            <div class="text-errores">
+              <p><%= errores.contrasena.msg%></p>
+            </div>
+          <% } %>
+                    <!-- para validar los formatos de los archivos usamos el atributo accept esto de una vez no muestra ningun otro formato en el buscador de archivos-->
+          <div class="contenedorInput" aria-inval id="datos_usuario">
+            <label for="imagen" class="form-label"><b>Imagen:</b></label><br>
+            <input required type="file" name="imagen" id="imagen"class="form-input" accept="image/jpeg, image/jpg, image/png, image/gif" /></input>
+              <% if (locals.errores && errores.imagen) {  %>
+                <%= errores.imagen.msg %>
+              <% } %>
+          </div> 
+          <div class="contenedorInput" id="datos_usuario">
+          <label for="rol" class="form-label"><b>Rol:</b></label><br>
+            <select name="rol" class="form-input" id="rol">
+              <% for (let i of r){ %>
+                <option value="<%= i.id%>"> <%= i.nombre%> </option>
+              <% } %>
+            </select>
+          </div>
+
+          <div class="contenedorBotonLink">
+            <div class="contenedorBoton">
+              <button type="submit" id="añadirUsuario" class="boton" style="padding-left: 2.5rem; padding-right: 2.5rem;">Enviar</button>
+            </div>
+            <div>
+              <p><a href="/" class="link-dark">Accede, si ya tienes una cuenta creada</a></p>
+            </div>
+          </div>
+        </div>
+      </form> 
+    </div>
+  </body>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+  <script src="/js/formularioregistro.js"></script>
+</html>
+      

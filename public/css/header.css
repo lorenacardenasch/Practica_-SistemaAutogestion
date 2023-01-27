@@ -1,0 +1,10 @@
+.navbar{
+    width: 100% !important;
+    color:white;
+    font-family: Roboto;
+}
+.navbar-collapse{
+    display: flex;
+    justify-content: right;
+    align-items: right;
+}

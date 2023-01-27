@@ -1,0 +1,55 @@
+.body{
+    background-image: url(../img/fondo.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    background-color: black;
+    font-family: Roboto;
+}
+.gradient-custom {
+    /* fallback for old browsers */
+    background: #340856;
+    
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right bottom, #230443, #815c97);
+    
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right bottom, #2b064d, #ab90b9)
+}
+.imagenUser{
+    margin: 30px;
+}
+.iconos{
+    color: #572975c3;
+}
+.iconos:hover, .iconos:focus{
+    background-size: 100% 2px;
+    color: #1b003a;
+}
+
+.boton{
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    background-color: #572975c3;
+    font-weight: 600;
+    font-size: 25px;
+    color:white;
+    cursor: pointer;
+    width: 150px;
+    height: 40px;
+    text-align: center;
+}
+.boton:hover{
+    background-color: #1b003a;
+    color: white;
+}
+.password-icon {
+    float: right;
+    position: relative;
+    margin: -25px 10px 0 0;
+    cursor: pointer;
+}

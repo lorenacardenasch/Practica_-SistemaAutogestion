@@ -1,0 +1,86 @@
+.body{
+    background-image: url(../img/fondo.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    background-color: black;
+    font-family: Roboto;
+}
+
+.encabezado h3{
+    padding: 20px;
+    font-weight: 400;
+    font-size: 34px;  
+    color: white
+}
+
+.contenedor-for{
+    display:grid;
+    grid-template-rows: 70% 30%;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.25) !important;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    width: 300px;
+    height: 500px;
+    background-color: white;
+    color:black;
+}
+
+.datos{
+    display: grid;
+    grid-template-rows: 33.3%  33.3% 33.3%;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color:black;
+    text-align: center;
+}
+
+
+.nombre{
+    font-size: 15px;
+}
+
+.container{
+	width: 900px;
+}
+
+.card{
+    margin: 10px;
+	background-color: rgba(255, 255, 255, 0.68);
+	border:none;
+	border-radius: 8px;
+	width: 190px;
+	box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(255, 255, 255, 0.19);
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	-ms-border-radius: 8px;
+	-o-border-radius: 8px;
+}
+.card:hover{
+    margin:3px;
+}
+.image-container{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+	position: relative;
+    background-color;:rgb(63, 63, 63)
+}
+.thumbnail-image{
+    width: 150px;
+    height: 100px;
+	border-radius: 8px !important;
+	-webkit-border-radius: 8px !important;
+	-moz-border-radius: 8px !important;
+	-ms-border-radius: 8px !important;
+	-o-border-radius: 8px !important;
+}
+
+
+

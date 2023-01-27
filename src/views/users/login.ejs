@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>Registro</title>
+    <link rel="stylesheet" href="/css/login.css"></link>
+  </head>
+  <body class="body">
+    <div class="main">
+      <div class="contenedorImagen"> 
+      </div>
+      <form action="/login" method="POST" id="formulario">
+        <div class="contenedorLogin"> 
+          <div class="encabezado">
+            <h3>Bienvenido </h3>
+            <% if (existe) { %>
+              <div class="fail">
+                <p>El usuario no se encuentra registrado o la contraseña es erronea</p>
+              </div>
+            <% } %>
+          </div>
+          <!-- Email input -->
+          <div class="contenedorInput" id="datos_usuarioCreado">
+            <label for="email" class="form-label" ><b>Correo Electrónico :</b></label><br>
+            <input required type="email" id="email" name="email" class="form-input" placeholder="Email"/>
+          </div>
+          <!-- Password input -->
+          <div class="contenedorInput" id="datos_usuarioCreado">
+            <label for="contrasena" class="form-label"><b>Contraseña: </b></label><br>
+            <input required type="password" id="contrasena" name="contrasena" class="form-input" placeholder="Contraseña" pattern="(?=^.{8,}$)(?=.*\d)(?=.*\W+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" title="La contraseña debe ser de al menos 8 caracteres y tener letras mayúsculas, minúsculas, un número y un carácter especial." />
+          </div>
+          <div class="contenedorCheckBoton">
+            <div class="contenedorCheck">
+              </p><input type="checkbox" id="scales" name="scales"><label for="scales">Recordarme</label></input><p>
+            </div>
+            <div class="contenedorBoton">
+                <button onclick="miFunc()" type="submit" id="boton" class="boton">LOGIN</button>
+            </div>
+          </div> 
+          <div class="contenedorLink">
+            <p><a href="/registro" class="link-dark"> Crear cuenta nueva</a></p>
+          </div>   
+        </div>
+      </form>
+    </div>
+  </body>
+  <script src="/js/formulariologin.js"></script>
+</html>
+      
