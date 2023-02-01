@@ -18,6 +18,8 @@ const controladorUsuarios =
     res.render("users/registro", {r: rol,existe: false}); },
 //-------------mostrar perfil de usuario ---------
   perfil: async (req, res) => { 
+    console.log("COOKIE")
+    console.log(req.cookies.email);
     let rol = await db.Rol.findAll();
     let usuario = await db.Usuario.findOne({where: {id: req.params.id}})
     res.render("users/perfil", {r: rol,usuario : usuario})},
@@ -76,12 +78,16 @@ const controladorUsuarios =
           return res.render("users/login",{existe: true});
         }
         if (bcrypt.compareSync(req.body.contrasena, usuario.contrasena)) {
-          req.session.usuarioLogged = usuario;
+          req.session.userLogged = usuario;
           /* Crear cookie */
-          res.cookie("email", usuario.email, {
-            maxAge: 600000 * 144,
-            httpOnly: true,
-          });
+          if(req.body.remember){
+            res.cookie("email", usuario.email, {
+              maxAge: 600000 * 144,
+              httpOnly: true,
+            });
+
+          }
+          
           // we're going to save the email in the session
           return res.render("users/perfil", {usuario:usuario});
         } else {
@@ -135,6 +141,11 @@ const controladorUsuarios =
       });
     },
 
+    logout: (req,res) =>{
+      res.clearCookie('email');
+      req.session.destroy();
+      return (res.redirect("/"))
+    },
 
   /* Datos para API USUARIO Cantidad de Usuarios*/
 
@@ -168,10 +179,7 @@ const controladorUsuarios =
       })
   },
 };
-//   //   res.render('./users/registro',{ errors : errors.mapped(), datosUsuarioViejo: req.body });
+
 //------------EXPORTAR MODULO CONTROLADOR USUARIOS------------------
 module.exports = controladorUsuarios;
 
-//----------------DATOS DEL JSON----------------------------------------
-//const usuariosFilePath = path.join(__dirname,'../data/usuarios.json');
-//const users = JSON.parse(fs.readFileSync(usuariosFilePath,'utf-8'));

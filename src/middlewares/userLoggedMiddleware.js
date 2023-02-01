@@ -1,0 +1,11 @@
+function userLoggedMiddleware(req,res,next){
+    res.locals.isLogged = false;
+    if (req.session.userLogged){
+        res.locals.isLogged = true;
+        res.locals.userLogged = req.session.userLogged
+    }
+    let emailInCookie = req.cookies.email
+    console.log(emailInCookie)
+    next();
+}
+module.exports = userLoggedMiddleware;

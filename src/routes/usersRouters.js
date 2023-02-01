@@ -95,6 +95,9 @@ router.delete("/:id", usersControllers.eliminarUsuario);
 /*** Mostrar lista de usuarios ***/
 router.get("/listaUsuarios", usersControllers.informacionUsuarios);
 
+/*** Cerrar sesión ***/
+router.get("/logout", usersControllers.logout);
+
 // /*** Consulta usuarios***/
 router.get("/consultaUsuarios", usersControllers.consultaUsuarios);
 

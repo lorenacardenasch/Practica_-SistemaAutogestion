@@ -10,18 +10,22 @@ const {check} = require("express-validator");
 const cors = require('cors');
 //-------------------------IMPORTACION ENRUTADORES------------------------------------------------------
 const usersRouters = require("./src/routes/usersRouters"); //se trae el enrutador
+const userLoggedMiddleware = require('./src/middlewares/userLoggedMiddleware');
 //----------------MIDDLEWARES-----------------------------------------------------------------
 app.use(express.static(path.resolve(__dirname, './public')));//vuelve publica la carpeta public
 app.use(express.urlencoded({extended:false})); // utilizar el metodo POST
 app.use(express.json()); // utilizar el mtodo post
 app.use(methodOverride('_method')); //utilizar el metodo put y delete 
-app.use(session( {secret: "Este es mi secreto"} )); 
+app.use(session( {
+  secret: "Este es mi secreto",
+  resave: false,
+  saveUninitialized: false} )); 
 app.use(cookieParser());
 app.use(cors());
-// app.use(auditoriaUnoMiddleware); //utilizo middleware
 app.get('/cookie',function(req, res){
   res.cookie(cookie_name , 'cookie_value').send('Cookie is set');
 });
+app.use(userLoggedMiddleware); //utilizo middleware
 //-------------TEMPLATE ENGINE--------------------------------------------------------------------
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "./src/views")); // Define la ubicación de la carpeta de las Vistas

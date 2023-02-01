@@ -51,11 +51,14 @@
 }
 
 .card{
+    display: flex;
+    justify-content: center;
+    align-content: center;
     margin: 10px;
 	background-color: rgba(255, 255, 255, 0.68);
 	border:none;
 	border-radius: 8px;
-	width: 190px;
+	width: 205px;
 	box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(255, 255, 255, 0.19);
 	-webkit-border-radius: 8px;
 	-moz-border-radius: 8px;
@@ -69,12 +72,15 @@
     display: flex;
     justify-content: center;
     align-content: center;
-	position: relative;
-    background-color;:rgb(63, 63, 63)
+    text-align: center;
+    width: 200px;
+    height: 300px;
+    padding: 10px 10px 10px 10px;
+    background-color :rgb(255, 255, 255);
 }
 .thumbnail-image{
-    width: 150px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
 	border-radius: 8px !important;
 	-webkit-border-radius: 8px !important;
 	-moz-border-radius: 8px !important;
