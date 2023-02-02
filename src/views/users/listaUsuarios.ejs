@@ -15,7 +15,7 @@
             <%for(let u of usuario){%>
     		<div class="col-md-3">
                 <div class="card">
-                    <a href="/perfil/<%=u.id %>">
+                    <a href="/perfil/<%=u.id%>">
                         <div class="image-container">
                             <img src="<%=u.imagen%>" class="img-fluid rounded thumbnail-image">	
                         </div>  
@@ -23,14 +23,11 @@
                             <div class="d-flex flex-column">
                                 <h5 class="nombre"><%=u.nombre%> <%=u.apellido%></h5>   
                             </div>
-                            <div class="d-flex flex-column">
-                                <p class ="rol">ROL</p>
-                            </div>
                         </div>
                     </a>
     			</div>
-    		</div>
-            <% } %>   
+    		</div>  
+            <% } %> 
         </div>
     </div>
 </body>

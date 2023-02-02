@@ -51,6 +51,7 @@
     font-weight: 400;
     font-size: 34px;   
     font-family: Roboto; 
+    margin: 15px;
 }
 input[type="password"], input[type="email"]{
     border-radius: 8px;

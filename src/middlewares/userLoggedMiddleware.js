@@ -5,6 +5,7 @@ function userLoggedMiddleware(req,res,next){
     res.locals.isLoggedAdmin = false;
     if (req.session.userLogged){
         res.locals.isLogged = true;
+        res.locals.userLogged = req.session.userLogged;
     }
     if(req.session.userLoggedAdmin == 1){
         res.locals.isLoggedAdmin = true;

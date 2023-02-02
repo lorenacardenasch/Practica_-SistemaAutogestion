@@ -14,10 +14,10 @@
           <div class="row g-0">
             <div class="col-md-4 gradient-custom text-center text-white"
               style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
-              <form action="/editarPerfil/<%= usuario.id%>?_method=PUT" method="POST" enctype="multipart/form-data">
+              <form action="/editarPerfilUser/<%= usuario.id%>?_method=PUT" method="POST">
                 <img src="<%=usuario.imagen%>" alt="Imagen de usuario" class="rounded-circle imagenUser" width="100 px">
                 <h5><%=usuario.nombre%> <%=usuario.apellido%></h5>
-                <p>ROL</p>
+                <p><%=usuario.Rol.nombre%></p>
             </div>
             <div class="col-md-8">
               <div class="card-body p-4">
@@ -26,12 +26,11 @@
                 <div class="row pt-1">
                   <div class="col-6 mb-3">
                     <h6>Nombre</h6>
-                    <!--same as in registro-->
-                    <input type="text" id="nombre" name="nombre" class="form-control required" minlength="2" maxlength="20" pattern="[A-Za-z ]{2,20}" title="El nombre debe tener entre 2 y 20 caracteres y solo puede contener letras" required>
+                    <p class="text-muted"><%=usuario.nombre%></p>
                   </div>
                   <div class="col-6 mb-3">
                     <h6>Apellidos</h6>
-                    <input type="text" id="apellido" name="apellido" class="form-control required" minlength="2" maxlength="20" pattern="[A-Za-z ]{2,20}" title="El apellido debe tener entre 2 y 20 caracteres y solo puede contener letras" required>
+                    <p class="text-muted"><%=usuario.apellido%></p>
                   </div>
                 </div>
                 <div class="row pt-1">
@@ -41,12 +40,7 @@
                   </div>
                   <div class="col-6 mb-3">
                     <h6>Contraseña</h6>
-                    <input type="password" name="password" class="form-control password1 required" value="<%=usuario.email%>" placeholder="" />
-                    <span class="fa fa-fw fa-eye password-icon show-password"></span>
-                  </div>
-                  <div class="col-8 mb-4">
-                    <h6>Imagen</h6>
-                    <input type="file" name="imagen" id="imagen" multiple accept="image/jpeg, image/jpg, image/png, image/gif" /></input>
+                    <input required type="password" id="contrasena" name="contrasena" class="form-control required" placeholder="Ingrese una contraseña" pattern="(?=^.{8,}$)(?=.*\d)(?=.*\W+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" title="La contraseña debe ser de al menos 8 caracteres y tener letras mayúsculas, minúsculas, un número y un carácter especial."/>
                   </div>
                 </div>
                 <div class="d-flex justify-content-center">
