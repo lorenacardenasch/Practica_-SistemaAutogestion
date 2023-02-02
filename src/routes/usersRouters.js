@@ -1,12 +1,15 @@
-// ------------REQUERIMIENTOS-----------------------
+/***Requerimientos***/
 const express = require("express");
 const router = express.Router();
-const usersControllers = require("../controllers/usersControllers");
-const multer  = require('multer'); //multer
 const path = require("path");
-const { body } = require('express-validator');
+const multer  = require('multer');
+const usersControllers = require("../controllers/usersControllers");
+const validationLogin = require("../middlewares/validationLogin");
+const guestMiddleware = require('../middlewares/guestMiddleware');
+const authMiddleware = require('../middlewares/authMiddleware.js')
 const { string } = require("i/lib/util");
-//---------MULTER------------------------------------
+
+/***Multer***/
 const multerDiskStorage = multer.diskStorage({
     destination: function(req, file, cb) {       // request, archivo y callback que almacena archivo en destino
      cb(null, path.join(__dirname,'../../public/img/users'));    // Ruta donde almacenamos el archivo
@@ -16,87 +19,40 @@ const multerDiskStorage = multer.diskStorage({
      cb(null, imageName);         
     }
 });
-const fileFilter = (req, file, cb) => {
-  if ((file.mimetype),includes('gif')|| (file.mimetype) .includes('png') || (file.mimetype).includes('jpg')) {
-     cb(null, true);
- } else {                                      I
-     //cb(new multer.MulterError('not a PNG'), false);
-     cb(null, false);
-     return cb(new Error('No es -una imagen'));}}
 
-const uploadFile = multer({ storage: multerDiskStorage });
+const uploadFile = multer({ storage: multerDiskStorage,limits:{fileSize:1000000},
+    fileFilter :(req, file, cb) => {
+        let type = file.mimetype.startsWith('image/');
+        type?cb(null, true):cb(new Error('No es un archivo tipo imagen'));
+    }
+});
 
+/***Rutas ***/
 
-//------------------VALIDACIONES-----------------------------
-const validacionRegistro =[
-    body('nombre').notEmpty().withMessage("Introduce un nombre valido").bail(),
-    body('apellido').notEmpty().withMessage("Introduce un apellido valido").bail(),
-    body('email').notEmpty().withMessage("Introduce un email valido").bail().isEmail().withMessage("debes escribir un formato valido"),
-    body('contrasena').notEmpty().withMessage("introducion contraseña valido").bail().isLength({min: 8}).withMessage("minimo de ocho caracteres"),
-    body('rol').notEmpty().withMessage("Elige un rol"),
-/*     body("imagen").custom((value,{req}) => {
-        let imagen = req.file;
-        let imagenExtensiones = ['.jpg','.png', '.gif'];
-        if (!imagen){
-            throw new Error("Suba un archivo de imagen");
-        }else{
-            let imagenExtension = path.extname(file.originalname);
-            if(!imagenExtensiones.includes(imagenExtension)){
-                throw new Error('La extension de la imagen no es permitida.')
-             }
-        }
-    return true; 
-})*/
-
-]
-const validacionLogin =[
-    body('email').notEmpty().withMessage("introduce un mail valido").bail().isEmail().withMessage("debes completar el mail"),
-    body('contrasena').notEmpty().withMessage("introducion contraseña valido").bail().isLength({min: 8}).withMessage("minimo de ocho caracteres"),
-]
-const validacionEditarPerfil =[
-    body('nombre').notEmpty().withMessage("Introduce un nombre valido").bail(),
-    body('apellido').notEmpty().withMessage("Introduce un apellido valido").bail(),
-/*     body("imagen").custom((value,{req}) => {
-        let imagen = req.file;
-        let imagenExtensiones = ['.jpg','.png', '.gif'];
-        if (!imagen){
-            throw new Error("Suba un archivo de imagen");
-        }else{
-            let imagenExtension = path.extname(file.originalname);
-            if(!imagenExtensiones.includes(imagenExtension)){
-                throw new Error('La extension de la imagen no es permitida.')
-             }
-        }
-    return true; 
-})*/
-
-]
-//----------------RUTAS------------------------------------
-
-/***LOGIN AND CREATE USER ***/
 /*** Mostrar pagina de login***/
-router.get("/",usersControllers.login);
+router.get("/",guestMiddleware, usersControllers.login);
+
 /*** Autenticación del login***/
-router.post("/login", validacionLogin, usersControllers.procesoLogin);
+router.post("/", usersControllers.procesoLogin);
+
+/*** Cerrar sesión ***/
+router.get("/logout", usersControllers.logout);
 
 /***Mostrar pagina de registro y crear Usuario***/
-router.get("/registro",usersControllers.usuarioRegistro);
-router.post("/registro", uploadFile.single('imagen'),validacionRegistro, usersControllers.crearUsuario);
-
+router.get("/registro", usersControllers.usuarioRegistro);
+router.post("/registro", uploadFile.single('imagen'), usersControllers.crearUsuario);
 
 /*** Mostrar perfil de usuario y editar el perfil de usuario***/
-router.get("/perfil/:id",usersControllers.perfil);
-router.get("/editarPerfil/:id",usersControllers.editarPerfil);
-router.put("/editarPerfil/:id", uploadFile.single('imagen'), validacionEditarPerfil, usersControllers.actualizarPerfil);
+router.get("/perfil/:id",authMiddleware, usersControllers.perfil);
+router.get("/editarPerfil/:id",authMiddleware,usersControllers.editarPerfil);
+router.put("/editarPerfil/:id", uploadFile.single('imagen'), usersControllers.actualizarPerfil);
 
 /***Eliminar Usuario ***/
 router.delete("/:id", usersControllers.eliminarUsuario);
 
 /*** Mostrar lista de usuarios ***/
-router.get("/listaUsuarios", usersControllers.informacionUsuarios);
+router.get("/listaUsuarios", authMiddleware, usersControllers.informacionUsuarios);
 
-/*** Cerrar sesión ***/
-router.get("/logout", usersControllers.logout);
 
 // /*** Consulta usuarios***/
 router.get("/consultaUsuarios", usersControllers.consultaUsuarios);

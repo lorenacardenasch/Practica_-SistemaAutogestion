@@ -66,6 +66,7 @@
                 <%= errores.imagen.msg %>
               <% } %>
           </div> 
+          <% if (locals.isLogged) { %>
           <div class="contenedorInput" id="datos_usuario">
           <label for="rol" class="form-label"><b>Rol:</b></label><br>
             <select name="rol" class="form-input" id="rol">
@@ -74,7 +75,7 @@
               <% } %>
             </select>
           </div>
-
+          <% } %>
           <div class="contenedorBotonLink">
             <div class="contenedorBoton">
               <button type="submit" id="añadirUsuario" class="boton" style="padding-left: 2.5rem; padding-right: 2.5rem;">Enviar</button>

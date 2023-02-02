@@ -3,18 +3,19 @@
   <head>
     <title>Registro</title>
     <link rel="stylesheet" href="/css/login.css"></link>
+    <%-include("../partials/head")%>
   </head>
   <body class="body">
     <div class="main">
       <div class="contenedorImagen"> 
       </div>
-      <form action="/login" method="POST" id="formulario">
+      <form action="/" method="POST" id="formulario">
         <div class="contenedorLogin"> 
           <div class="encabezado">
             <h3>Bienvenido </h3>
             <% if (existe) { %>
               <div class="fail">
-                <p>El usuario no se encuentra registrado o la contraseña es erronea</p>
+                <p>Las credenciales son incorrectas</p>
               </div>
             <% } %>
           </div>

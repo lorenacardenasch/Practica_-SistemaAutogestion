@@ -2,9 +2,8 @@
     text-align: center;
     margin-top: 2vh;
     color: #dc3545;
-    background-color: white;
-    border-radius: 8px;
 }
+
 .body{
     background-image: url(../img/fondo.jpg);
     background-repeat: no-repeat;

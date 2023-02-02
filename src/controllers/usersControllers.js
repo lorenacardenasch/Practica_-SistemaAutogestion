@@ -1,31 +1,48 @@
-//-----------------REQUERIMIENTOS-------------------------
+/* Requerimientos*/
 const fs = require("fs");
 const path = require("path");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
-//----------------IMPORTO MODELOS----------------------------------------
+/* Importar datos */
 const db = require("../database/models");
 const { group } = require("console");
-//------------OBJETO DEL CONTROLADOR------------------
+
+/* Objeto controlador */
 const controladorUsuarios = 
 {
-//------------mostrar pagina login ------------------
+
+/* Render pagina Login */
+
   login: (req, res) => { 
     res.render ('users/login',{existe: false}); },
-//------------mostrar pagina de registro------------------
+
+/* Render pagina registro */
+
   usuarioRegistro: async (req,res) => { 
     let rol = await db.Rol.findAll();
-    res.render("users/registro", {r: rol,existe: false}); },
-//-------------mostrar perfil de usuario ---------
+    res.render("users/registro", {existe: false,r: rol}); },
+
+/* Render pagina perfil*/
+
   perfil: async (req, res) => { 
-    console.log("COOKIE")
-    console.log(req.cookies.email);
-    let rol = await db.Rol.findAll();
-    let usuario = await db.Usuario.findOne({where: {id: req.params.id}})
-    res.render("users/perfil", {r: rol,usuario : usuario})},
+    let usuario = await db.Usuario.findOne({where: {id: req.params.id}, include: [{association: 'Rol'}]});
+    res.render("users/perfil", {usuario : usuario})},
+
+/*Editar perfil */
+  editarPerfil: (req,res) =>{
+    let usuario = db.Usuario.findOne({where: {id: req.params.id}}).then(function(usuario){
+      return res.render("users/editarPerfil", {usuario:usuario});
+    })
+  },
+
   //------------------crear usuario-----------------
+
   crearUsuario: (req, res) => {
     const errores = validationResult(req);
+    let rolUsuario = req.body.rol_id_FK;
+    if(req.body.rol_id_FK == undefined || req.body.rol_id_FK == null ){
+      rolUsuario = 2
+    }
     if (errores.errors.length == 0) {
       db.Usuario.findOne({ where: { email: req.body.email } }).then(function (
         usuario
@@ -41,7 +58,7 @@ const controladorUsuarios =
               email: req.body.email,
               contrasena: bcrypt.hashSync(req.body.contrasena, 10),
               imagen: "/img/users/" + group.image,
-              rol_id_FK: req.body.rol,
+              rol_id_FK: rolUsuario,
             }
             db.Usuario.create(usuarioNuevo).then(function (usuario) {
               return res.render('users/login',{existe: false})
@@ -54,7 +71,7 @@ const controladorUsuarios =
               email: req.body.email,
               contrasena: bcrypt.hashSync(req.body.contrasena, 10),
               imagen: "/img/users/" + group.image,
-              rol_id_FK: req.body.rol,
+              rol_id_FK: rolUsuario,
             }
             db.Usuario.create(usuarioNuevo).then(function (usuario) {
               return res.render('users/login',{existe: false})
@@ -66,44 +83,36 @@ const controladorUsuarios =
       res.render('users/registro',{ errores : errores.mapped(), datosUsuarioViejo: req.body });
     }
   },
+
   //------------------autenticación usuario-----------------
+
   procesoLogin: (req, res) => {
     const errores = validationResult(req);
     if (errores.errors.length == 0) {
-      db.Usuario.findOne({ where: { email: req.body.email } }).then(function (
-        usuario
-      ) {
+      db.Usuario.findOne({ where: { email: req.body.email } })
+      .then(function (usuario) {
         /* Se envia un mensaje de error si no se encuentra el usuario*/
         if (!usuario) {
-          return res.render("users/login",{existe: true});
-        }
+          return res.render("users/login",{existe: true})}
         if (bcrypt.compareSync(req.body.contrasena, usuario.contrasena)) {
+          /* Crear session */
           req.session.userLogged = usuario;
+          req.session.userLoggedAdmin = usuario.rol_id_FK;
           /* Crear cookie */
           if(req.body.remember){
             res.cookie("email", usuario.email, {
               maxAge: 600000 * 144,
               httpOnly: true,
-            });
-
-          }
-          
-          // we're going to save the email in the session
-          return res.render("users/perfil", {usuario:usuario});
-        } else {
-          /* Se envia un mensaje de error por contraseña incorrecta */
-          return res.render("users/login",{existe: true});
-        }
+            });}
+          return res.redirect(`/perfil/${usuario.id}`);
+        } else { 
+          return res.render("users/login",{existe: true});} /* Se envia un mensaje de error por contraseña incorrecta */
       });
     }
   },
-  //------------------editar usuario-----------------
-  editarPerfil: (req,res) =>{
-    let usuario = db.Usuario.findOne({where: {id: req.params.id}}).then(function(usuario){
-      return res.render("users/editarPerfil", {usuario:usuario});
-    })
-  },
-  //------------------actualizar usuario-----------------
+
+/* Actualizar perfil de usuario*/
+
   actualizarPerfil: async (req,res) =>{
     const errores = validationResult(req);
     if (errores.errors.length == 0){
@@ -130,16 +139,22 @@ const controladorUsuarios =
       }
     }
   },
-    //------------ELIMINAR PRODUCTO---------------
-    eliminarUsuario: (req, res) => {
-      db.Usuario.destroy({ where: { id: req.params.id } }).then(function (){})
+
+/*Eliminar Usuario*/
+
+  eliminarUsuario: (req, res) => {
+    db.Usuario.destroy({ where: { id: req.params.id } }).then(function (){})
     }, 
 
-    informacionUsuarios : (req, res) => {
-      db.Usuario.findAll().then(function (usuario) {
+/*Información de usuarios*/
+
+  informacionUsuarios : (req, res) => {
+    db.Usuario.findAll().then(function (usuario) {
         res.render("users/listaUsuarios", { usuario: usuario });
       });
     },
+
+/* Cerrar sesion*/
 
     logout: (req,res) =>{
       res.clearCookie('email');
@@ -147,7 +162,7 @@ const controladorUsuarios =
       return (res.redirect("/"))
     },
 
-  /* Datos para API USUARIO Cantidad de Usuarios*/
+/* API CANTIDAD DE USUARIOS*/
 
   consultaUsuarios : (req, res) => {
     db.Usuario.findAll().then(function(usuario) {
@@ -177,7 +192,7 @@ const controladorUsuarios =
           errors: err                   
         })
       })
-  },
+    }
 };
 
 //------------EXPORTAR MODULO CONTROLADOR USUARIOS------------------
