@@ -92,10 +92,16 @@ router.get("/logout", usersControllers.logout);
 router.get("/registro", validacionRegistro, usersControllers.usuarioRegistro);
 router.post("/registro", uploadFile.single('imagen'),validacionRegistro, usersControllers.crearUsuario);
 
+router.get("/registroAdmin", validacionRegistro, usersControllers.usuarioRegistroAdmin);
+router.post("/registroAdmin", uploadFile.single('imagen'),validacionRegistro, usersControllers.crearUsuarioAdmin);
+
 /*** Mostrar perfil de usuario y editar el perfil de usuario***/
-router.get("/perfil/:id", usersControllers.perfil);
+router.get("/perfilUser", usersControllers.perfilUser);
+router.get("/perfilAdmin", usersControllers.perfilAdmin);
+
 router.get("/editarPerfilUser/:id", usersControllers.editarPerfilUser);
 router.put("/editarPerfilUser/:id", uploadFile.single('imagen'), usersControllers.actualizarPerfilUser);
+
 router.get("/editarPerfilAdmin/:id", usersControllers.editarPerfilAdmin);
 router.put("/editarPerfilAdmin/:id", uploadFile.single('imagen'), usersControllers.actualizarPerfilAdmin);
 

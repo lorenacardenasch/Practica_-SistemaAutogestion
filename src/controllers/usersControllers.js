@@ -22,7 +22,7 @@ const controladorUsuarios =
   procesoLogin: (req, res) => {
     const errores = validationResult(req);
     if (errores.errors.length == 0) {
-      db.Usuario.findOne({ where: { email: req.body.email } })
+      db.Usuario.findOne({ where: { email: req.body.email }, include: [{association: 'Rol'}] })
       .then(function (usuario) {
         /* Se envia un mensaje de error si no se encuentra el usuario*/
         if (!usuario) {
@@ -37,7 +37,12 @@ const controladorUsuarios =
             res.cookie("email", usuario.email, {
               maxAge: 600000 * 144,
               httpOnly: true,});}
-          return res.redirect(`/perfil/${usuario.id}`);
+          if (req.session.userLoggedAdmin == 2){
+            res.render("users/perfilUser", {usuario : usuario})
+          }
+          if (req.session.userLoggedAdmin == 1){
+            return res.render("users/perfilAdmin",{usuario : usuario});
+          }   
         } else { 
           return res.render("users/login",{existe: true});} /* Se envia un mensaje de error por credenciales incorrectas */
       });
@@ -48,13 +53,23 @@ const controladorUsuarios =
 
   usuarioRegistro: async (req,res) => { 
     let rol = await db.Rol.findAll();
-    res.render("users/registro", {existe: false,r: rol}); },
+    res.render("users/registro", {existe: false}); },
+
+  usuarioRegistroAdmin: async (req,res) => { 
+    let rol = await db.Rol.findAll();
+    res.render("users/registroAdmin", {existe: false,rol: rol}); },
 
 /* Render pagina perfil*/
 
-  perfil: async (req, res) => { 
+  perfilUser: async (req, res) => { 
+    let usuario = await db.Usuario.findOne({where: {id: req.body.id}, include: [{association: 'Rol'}]});
+    res.render("users/perfilUser", {usuario : usuario})},
+
+    /* Render pagina perfil*/
+
+  perfilAdmin: async (req, res) => { 
     let usuario = await db.Usuario.findOne({where: {id: req.params.id}, include: [{association: 'Rol'}]});
-    res.render("users/perfil", {usuario : usuario, rol: 'admin'})},
+    res.render("users/perfilAdmin", {usuario : usuario})},
 
 /*Editar perfil */
 
@@ -70,8 +85,8 @@ const controladorUsuarios =
         contrasena: bcrypt.hashSync(req.body.contrasena, 10)
       }
       let actualizarUsuario = await db.Usuario.update(nuevosDatos, {where: {id: req.params.id}});
-      let usuario = await db.Usuario.findOne({where: {id: req.params.id}})
-      res.render('users/perfil', {usuario : usuario})
+      let usuario = await db.Usuario.findOne({where: {id: req.params.id}, include: [{association: 'Rol'}]})
+      res.render('users/perfilUser', {usuario : usuario})
     }
   },
 
@@ -83,30 +98,43 @@ const controladorUsuarios =
 
 /* Actualizar perfil de usuario*/
   actualizarPerfilAdmin: async (req,res) =>{
-  const errores = validationResult(req);
+    const errores = validationResult(req);
   if (errores.errors.length == 0){
+    if(req.file.filename){
+      group.image = req.file.filename;
       let nuevosDatos = {
-        contrasena: req.body.contrasena
+        nombre: req.body.nombre,
+        apellido: req.body.apellido,
+        imagen: "/img/users/" + group.image,
+        contrasena: bcrypt.hashSync(req.body.contrasena, 10)
       }
       let actualizarUsuario = await db.Usuario.update(nuevosDatos, {where: {id: req.params.id}});
-      let usuario = await db.Usuario.findOne({where: {id: req.params.id}})
-      res.redirect(`/perfil/${usuario.id}`, {usuario : usuario})
+      let usuario = await db.Usuario.findOne({where: {id: req.params.id}, include: [{association: 'Rol'}]})
+      res.render("users/perfilAdmin", {usuario : usuario})
+    }else{
+      group.image = 'default.png';
+      let nuevosDatos = {
+        nombre: req.body.nombre,
+        apellido: req.body.apellido,
+        imagen: "/img/users/" + group.image,
+        contrasena: bcrypt.hashSync(req.body.contrasena, 10)
+      }
+      let actualizarUsuario = await db.Usuario.update(nuevosDatos, {where: {id: req.params.id}});
+      let usuario = await db.Usuario.findOne({where: {id: req.params.id}, include: [{association: 'Rol'}]})
+      res.render("users/perfilAdmin", {usuario : usuario})
     }
-  },
-
+  }
+},
 
 /*Crear usuario */
   crearUsuario: (req, res) => {
-    const errores = validationResult(req);
     let rolUsuario = req.body.rol_id_FK;
-
     if(req.body.rol_id_FK == undefined || req.body.rol_id_FK == null ){
       rolUsuario = 2
     }
-
-    if (errores.errors.length == 0) {
-      db.Usuario.findOne({ where: { email: req.body.email } ,  include: [{association: 'Rol'}]})
-      .then(function (usuario) {
+    if (true) {
+      db.Usuario.findOne({ where: { email: req.body.email } }).then(function (usuario) 
+      {
         if (usuario) {
           return res.render("users/registro", {existe: true});
         } else {
@@ -118,11 +146,11 @@ const controladorUsuarios =
               email: req.body.email,
               contrasena: bcrypt.hashSync(req.body.contrasena, 10),
               imagen: "/img/users/" + group.image,
-              rol_id_FK: rolUsuario,
+              rol_id_FK:rolUsuario ,
             }
-            db.Usuario.create(usuarioNuevo)
-            .then(function (usuario) {
-              return res.render('users/registro',{existe: false})});
+            db.Usuario.create(usuarioNuevo).then(function (usuario) {
+              return res.render('users/login',{existe: false})
+            });
           }else{
             group.image = 'default.png';
             let usuarioNuevo = {
@@ -131,11 +159,54 @@ const controladorUsuarios =
               email: req.body.email,
               contrasena: bcrypt.hashSync(req.body.contrasena, 10),
               imagen: "/img/users/" + group.image,
-              rol_id_FK: rolUsuario,
+              rol_id_FK: rolUsuario ,
             }
             db.Usuario.create(usuarioNuevo).then(function (usuario) {
-              return res.render('users/registro',{existe: false})
+              return res.render('users/login',{existe: false})
             });
+          };
+        }
+      });
+    } else {
+      res.render('users/registro',{ errores : errores.mapped(), datosUsuarioViejo: req.body });
+    }
+    
+  },
+
+  crearUsuarioAdmin: (req, res) => {
+    if (true) {
+      db.Usuario.findOne({ where: { email: req.body.email}})
+      .then(function (usuario) {
+        if (usuario) {
+          return res.render("users/registroAdmin", {existe: true});
+        } else {
+          if(req.file.filename){
+            group.image = req.file.filename;
+            let usuarioNuevo = {
+              nombre: req.body.nombre,
+              apellido: req.body.apellido,
+              email: req.body.email,
+              contrasena: bcrypt.hashSync(req.body.contrasena, 10),
+              imagen: "/img/users/" + group.image,
+              rol_id_FK: req.body.rol,
+            }
+            db.Usuario.create(usuarioNuevo)
+            .then(function () {
+              return res.redirect('/listaUsuarios')});
+          }else{
+            let rol = db.Rol.findAll();
+            group.image = 'default.png';
+            let usuarioNuevo = {
+              nombre: req.body.nombre,
+              apellido: req.body.apellido,
+              email: req.body.email,
+              contrasena: bcrypt.hashSync(req.body.contrasena, 10),
+              imagen: "/img/users/" + group.image,
+              rol_id_FK: req.body.rol,
+            }
+            db.Usuario.create(usuarioNuevo)
+            .then(function () {
+              return  res.redirect('/listaUsuarios')});
           };
         }
       });
@@ -144,17 +215,18 @@ const controladorUsuarios =
     }
   },
 
-
 /*Eliminar Usuario*/
 
   eliminarUsuario: (req, res) => {
-    db.Usuario.destroy({ where: { id: req.params.id } }).then(function (){})
+    db.Usuario.destroy({ where: { id: req.params.id } }).then(function (){
+      return res.redirect("/listaUsuarios")
+    })
     }, 
 
 /*Información de usuarios*/
 
   informacionUsuarios : async(req, res) => {
-    let usuario = await db.Usuario.findAll();
+    let usuario = await db.Usuario.findAll({ where: { rol_id_FK: 2 } });
         res.render("users/listaUsuarios", {usuario: usuario })},
 
 /* Cerrar sesion*/
