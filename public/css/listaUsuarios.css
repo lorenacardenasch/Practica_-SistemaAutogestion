@@ -88,5 +88,36 @@
 	-o-border-radius: 8px !important;
 }
 
+.boton{
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    background-color: #572975c3;
+    font-weight: 600;
+    font-size: 25px;
+    color:white;
+    cursor: pointer;
+    width: 150px;
+    height: 40px;
+    text-align: center;
+}
+.boton:hover{
+    background-color: #1b003a;
+    color: white;
+}
 
+.nombreUser h5{
+    font-weight: 500;
+    font-size: 18px;
+    color: #1b003a;
+
+}
+.botonEliminar{
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    margin: 10px;
+}
 

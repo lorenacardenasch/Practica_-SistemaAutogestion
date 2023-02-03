@@ -47,14 +47,16 @@
                         <div class="image-container">
                             <img src="<%=u.imagen%>" class="img-fluid rounded thumbnail-image">	
                         </div>  
-                        <div class="product-detail-container p-2">
+                        <div class="product-detail-container p-2 nombreUser">
                             <div class="d-flex flex-column">
-                                <h5 class="nombre"><%=u.nombre%> <%=u.apellido%></h5>   
+                                <h5 class="nombre"><%=u.nombre%> <%=u.apellido%></h5> 
                             </div>
                         </div>
+                        <div class="botonEliminar">
                         <form action="/<%= u.id%>?_method=DELETE" method="POST">
-                            <button type="submit" id="eliminarUsuario" class="boton">Eliminar Usuario</button>
+                            <button type="submit" id="eliminarUsuario" class="boton">Eliminar</button>
                         </form>
+                        </div>
                     </a>
     			</div>
     		</div>  

@@ -24,7 +24,7 @@ const controladorUsuarios =
     if (errores.errors.length == 0) {
       db.Usuario.findOne({ where: { email: req.body.email }, include: [{association: 'Rol'}] })
       .then(function (usuario) {
-        /* Se envia un mensaje de error si no se encuentra el usuario*/
+        /* Se envia un mensaje de error*/
         if (!usuario) {
           return res.render("users/login",{existe: true})}
         /* Si se encuentra el usuario*/
@@ -53,29 +53,34 @@ const controladorUsuarios =
 
   usuarioRegistro: async (req,res) => { 
     let rol = await db.Rol.findAll();
-    res.render("users/registro", {existe: false}); },
+    res.render("users/registro", {existe: false}); 
+  },
 
   usuarioRegistroAdmin: async (req,res) => { 
     let rol = await db.Rol.findAll();
-    res.render("users/registroAdmin", {existe: false,rol: rol}); },
+    res.render("users/registroAdmin", {existe: false,rol: rol}); 
+  },
 
 /* Render pagina perfil*/
 
   perfilUser: async (req, res) => { 
     let usuario = await db.Usuario.findOne({where: {id: req.body.id}, include: [{association: 'Rol'}]});
-    res.render("users/perfilUser", {usuario : usuario})},
+    res.render("users/perfilUser", {usuario : usuario})
+  },
 
     /* Render pagina perfil*/
 
   perfilAdmin: async (req, res) => { 
     let usuario = await db.Usuario.findOne({where: {id: req.params.id}, include: [{association: 'Rol'}]});
-    res.render("users/perfilAdmin", {usuario : usuario})},
+    res.render("users/perfilAdmin", {usuario : usuario})
+  },
 
 /*Editar perfil */
 
   editarPerfilUser: async (req,res) =>{
     let usuario = await db.Usuario.findOne({where: {id: req.params.id}, include: [{association: 'Rol'}]});
-    res.render("users/editarPerfilUser", {usuario : usuario})},
+    res.render("users/editarPerfilUser", {usuario : usuario})
+  },
 
 /* Actualizar perfil de usuario*/
   actualizarPerfilUser: async (req,res) =>{
@@ -98,7 +103,7 @@ const controladorUsuarios =
 
 /* Actualizar perfil de usuario*/
   actualizarPerfilAdmin: async (req,res) =>{
-    const errores = validationResult(req);
+  const errores = validationResult(req);
   if (errores.errors.length == 0){
     if(req.file.filename){
       group.image = req.file.filename;
@@ -128,11 +133,12 @@ const controladorUsuarios =
 
 /*Crear usuario */
   crearUsuario: (req, res) => {
+    const errores = validationResult(req);
     let rolUsuario = req.body.rol_id_FK;
     if(req.body.rol_id_FK == undefined || req.body.rol_id_FK == null ){
       rolUsuario = 2
     }
-    if (true) {
+    if (errores.errors.length == 0) {
       db.Usuario.findOne({ where: { email: req.body.email } }).then(function (usuario) 
       {
         if (usuario) {

@@ -6,7 +6,6 @@ const multer  = require('multer');
 const usersControllers = require("../controllers/usersControllers");
 const { body } = require('express-validator');
 const guestMiddleware = require('../middlewares/guestMiddleware');
-const authMiddleware = require('../middlewares/authMiddleware.js')
 const { string } = require("i/lib/util");
 
 /***Multer***/
@@ -43,7 +42,6 @@ const validacionRegistro =[
     body('apellido').notEmpty().withMessage("Introduce un apellido valido").bail(),
     body('email').notEmpty().withMessage("Introduce un email valido").bail().isEmail().withMessage("debes escribir un formato valido"),
     body('contrasena').notEmpty().withMessage("introducion contraseña valido").bail().isLength({min: 8}).withMessage("minimo de ocho caracteres"),
-    body('rol').notEmpty().withMessage("Elige un rol"),
 /*     body("imagen").custom((value,{req}) => {
         let imagen = req.file;
         let imagenExtensiones = ['.jpg','.png', '.gif'];
@@ -51,7 +49,7 @@ const validacionRegistro =[
             throw new Error("Suba un archivo de imagen");
         }else{
             let imagenExtension = path.extname(file.originalname);
-            if(!imagenExtensiones.includes(imagenExtension)){
+            if(!(imagenExtensiones.includes(imagenExtension))){
                 throw new Error('La extension de la imagen no es permitida.')
              }
         }
@@ -59,7 +57,7 @@ const validacionRegistro =[
 })*/
 ]
 /***Validaciones EditarPerfil***/
-const validacionEditarPerfil =[
+const validacionEditarPerfilAdmin =[
     body('nombre').notEmpty().withMessage("Introduce un nombre valido").bail(),
     body('apellido').notEmpty().withMessage("Introduce un apellido valido").bail(),
     body('contrasena').notEmpty().withMessage("Ingrese una contraseña valida").bail().isLength({min: 8}).withMessage("Ingrese minimo 8 caracteres"),
@@ -76,6 +74,9 @@ const validacionEditarPerfil =[
         }
     return true; 
 })*/
+]
+const validacionEditarPerfilUser =[
+    body('contrasena').notEmpty().withMessage("Ingrese una contraseña valida").bail().isLength({min: 8}).withMessage("Ingrese minimo 8 caracteres"),
 ]
 /***Rutas ***/
 
